@@ -1,19 +1,16 @@
 import { useState } from "react";
 
-const usePasswordToggle = () => {
-    const [visibility, setVisibility] = useState(false);
+const usePasswordToggle = (props) => {
+    const [visible, setVisible] = useState(false);
 
-    const toggleVisibility = () => setVisibility(visibility => !visibility);
+    const toggleVisibility = () => setVisible(visible => !visible);
 
-    const Icon = <img src={visibility ? "images/hide.png" : "images/view.png"} height="20px" width="20px" alt="Show/Hide Password" onClick={toggleVisibility} />
+    const Icon = visible ? "images/hide.png" : "images/view.png"
 
 
-    const InputType = (visibility ? "text" : "password");
+    const InputType = (visible ? "text" : "password");
 
-    return { Icon, InputType };
+    return { Icon, InputType, toggleVisibility };
 };
 
-export default usePasswordToggle;
-
-
-// I don't get it. why this code not working
+export { usePasswordToggle }
