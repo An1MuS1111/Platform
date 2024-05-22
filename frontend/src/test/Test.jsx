@@ -1,12 +1,15 @@
 
-import Login from '@pages/Login'
-import ProductCard from '@components/ProductCard'
+import Landing from '@pages/Landing'
+
+
 
 export default function Test() {
     return (
         <>
-            <Login />
-            {/* <ProductCard /> */}
+
+            <Landing />
+
+
         </>
     )
 }

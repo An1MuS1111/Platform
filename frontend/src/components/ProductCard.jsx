@@ -7,8 +7,8 @@ const ProductCard = () => {
     const [hidden, setHidden] = useState(true)
     return (
         <>
-            <div className="product_card__container">
-                <div className="outer__canvas">
+            <div className="productcard__container">
+                <div className="outer__canvas" >
                     <div onMouseEnter={() => setHidden(false)} onMouseLeave={() => setHidden(true)} className="inner__canvas">
 
                         <img width="100%" src="images/barrett-3-seat-queen-reversible-sleeper-sectional.jpg" alt="" />

@@ -1,28 +1,21 @@
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
-
-
 .outer__canvas {
     height: 500px;
     width: 350px;
     background-color: white;
 }
 
+.outer__canvas:hover {
+    border: 1px solid black;
+}
+
 .inner__canvas {
     position: relative;
-    margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     height: 300px;
     width: 100%;
     background-color: antiquewhite;
     display: flex;
-    /* align-items: center; */
     justify-content: center;
 }
 
