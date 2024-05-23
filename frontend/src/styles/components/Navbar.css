@@ -1,0 +1,68 @@
+.navbar {
+    overflow: hidden;
+    padding: 10px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    display: flex;
+    min-height: 40px;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid black;
+
+}
+
+.nav__left,
+.nav__right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav__left a {
+    text-decoration: none;
+    color: black;
+}
+
+.nav__left a:hover {
+    border-bottom: 2px black solid;
+}
+
+
+
+
+
+.nav__icons {
+    height: 25px;
+}
+
+
+
+.nav__search-bar {
+    resize: none;
+    min-width: 400px;
+    height: 30px;
+    overflow: hidden;
+
+}
+
+::-webkit-input-placeholder {
+
+    padding-left: 20px;
+    text-align: left;
+
+}
+
+:-moz-placeholder {
+
+    padding-left: 20px;
+    text-align: left;
+}
+
+textarea {
+
+    font-family: "Roboto", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+    font-size: 20px;
+}

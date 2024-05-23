@@ -2,7 +2,7 @@
     border: 1px solid rgb(135, 135, 135);
 
     height: 500px;
-    width: 350px;
+    width: 400px;
     background-color: white;
 }
 
@@ -68,7 +68,7 @@
     padding-left: 10px;
 
     width: 100%;
-    background-color: rgb(221, 255, 248);
+
     height: 140px;
 
 }
@@ -86,27 +86,30 @@
     padding-top: 10px;
     font-size: 25px;
     padding-right: 10px;
+    font-weight: 500;
 }
 
 .product__info {
-
+    padding: 0 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+.price {
+    font-size: 25px;
+    font-weight: 500;
 
+}
 
 .cart__section {
-    padding-left: 10px;
-    padding-right: 10px;
+
     border: 2px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 50px;
     width: 50px;
-    background-color: aqua;
 }
 
 .cart__section img {

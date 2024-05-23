@@ -23,18 +23,17 @@ const ProductCard = ({ product_name, product_type, product_cost_subtotal }) => {
                     </div> {/* inner__cnvas */}
 
                     <div className='product__details'>
-                        {/* <p className='product__type'>{product_type}</p>
-                        <p className='product__name'>{product_name}</p> */}
+                        <p className='product__type'>{product_type}</p>
+                        <p className='product__name'>{product_name}</p>
 
-                        <p className='product__type'>PRODUCT TYPE</p>
-                        <p className='product__name'>Duffle bag size extra large with slight red strip</p>
+
                     </div>
 
                     <div className="product__info">
                         <div className="price__section">
                             <p className='price__tag'>PRICE</p>
-                            {/* <p>$ {product_cost_subtotal}</p> */}
-                            <p>$ 120.09</p>
+                            <p className='price'>$ {product_cost_subtotal}</p>
+
                         </div>
 
                         <div className="cart__section"><img src="images/shopping-bag.png" alt="" className="cart__icon" /></div>
