@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 
 
+
 const app = express()
 
 
@@ -13,9 +14,9 @@ app.use(cors());
 app.use(express.json());
 
 
-const employeesRouter = require('./routes/employees')
+const productsRouter = require('./routes/products')
 
-app.use('/employees', employeesRouter)
+app.use('/products', productsRouter)
 
 
 PORT = 4444;

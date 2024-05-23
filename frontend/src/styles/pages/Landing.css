@@ -1,7 +1,7 @@
 .landing__container {
     height: 100vh;
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 500px 1fr;
     grid-template-rows: 60px 1fr;
 }
 
@@ -19,12 +19,16 @@
 }
 
 .productlist__container {
+    padding-right: 40px;
+
     grid-column: 2/3;
     grid-row: 2/3;
     background-color: skyblue;
     display: grid;
     grid-template-columns: repeat(4, max-content);
+    /* grid-template-rows: repeat(auto, max-content); */
 
+    /* grid-auto-rows: inherit; */
     justify-content: end;
     /* Align items to the right */
     /* gap: 10px; */

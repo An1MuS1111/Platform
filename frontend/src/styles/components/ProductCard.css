@@ -1,11 +1,13 @@
 .outer__canvas {
+    border: 1px solid rgb(135, 135, 135);
+
     height: 500px;
     width: 350px;
     background-color: white;
 }
 
 .outer__canvas:hover {
-    border: 1px solid black;
+    border: 1.5px solid black;
 }
 
 .inner__canvas {
@@ -59,4 +61,55 @@
     right: 0;
 
 
+}
+
+
+.product__details {
+    padding-left: 10px;
+
+    width: 100%;
+    background-color: rgb(221, 255, 248);
+    height: 140px;
+
+}
+
+
+.product__type {
+    color: rgb(87, 83, 83);
+    padding-top: 20px;
+    font-size: 20px;
+}
+
+.product__name {
+    text-align: justify;
+    color: rgb(0, 0, 0);
+    padding-top: 10px;
+    font-size: 25px;
+    padding-right: 10px;
+}
+
+.product__info {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+.cart__section {
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 50px;
+    background-color: aqua;
+}
+
+.cart__section img {
+    height: 40px;
+    width: 40px;
 }
