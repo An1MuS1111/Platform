@@ -15,7 +15,7 @@ import { Link } from "react-router-dom"
 import { ScrollArea } from "@/ui-components/ui/scroll-area"
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import axios from 'axios'
+import axios, { isCancel } from 'axios'
 
 export default function Component() {
 
@@ -29,6 +29,8 @@ export default function Component() {
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [search, setSearch] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     // const location = useLocation();
     const navigate = useNavigate();
@@ -46,11 +48,13 @@ export default function Component() {
                 min_price: minPrice || '',
                 max_price: maxPrice || '',
                 search: search || '',
+                page: currentPage,
             }).toString();
 
             try {
                 const response = await axios.get(`http://localhost:4444/products?${query}`);
-                setProducts(response.data);
+                setProducts(response.data.products);
+                setTotalPages(response.data.totalPages);
 
             } catch (error) {
                 console.error("Error fetching products:", error);
@@ -58,7 +62,7 @@ export default function Component() {
         };
 
         fetchProducts();
-    }, [categoryId, subCategoryId, minPrice, maxPrice, search]);
+    }, [categoryId, subCategoryId, minPrice, maxPrice, search, currentPage]);
 
 
     // Fetch product categories and subcategories
@@ -118,7 +122,16 @@ export default function Component() {
         navigate({ search: `?category_id=${categoryId}&sub_category_id=${subCategoryId}&max_price=${e.target.value}` });
     };
 
+    const handleSearchChange = (e) => {
+        setSearch(e.target.value);
+        setCurrentPage(1);
+        navigate({ search: `?search=${e.target.value}` });
+    };
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        navigate({ search: `?page=${page}` });
+    };
 
     return (
         <div className="bg-white">
@@ -131,7 +144,8 @@ export default function Component() {
                     </nav>
                 </div>
                 <div className="flex items-center space-x-4">
-                    <Input type="search" placeholder="Search product..." className="w-64" />
+                    {/* <Input type="search" placeholder="Search product..." className="w-64" /> */}
+                    <Input type="search" placeholder="Search product..." className="w-64" value={search} onChange={handleSearchChange} />
                     <UserIcon className="w-6 h-6" />
                     <ShoppingCartIcon className="w-6 h-6" />
                 </div>
@@ -276,23 +290,13 @@ export default function Component() {
                     <div className="flex justify-center mt-8">
                         <Pagination>
                             <PaginationContent>
-                                <PaginationItem>
-                                    <PaginationPrevious href="#" />
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink href="#">1</PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink href="#" isActive>
-                                        2
-                                    </PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink href="#">3</PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationNext href="#" />
-                                </PaginationItem>
+                                <PaginationPrevious disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)} />
+                                {[...Array(totalPages)].map((_, index) => (
+                                    <PaginationItem key={index} onClick={() => handlePageChange(index + 1)}>
+                                        <PaginationLink isActive={currentPage === index + 1}>{index + 1}</PaginationLink>
+                                    </PaginationItem>
+                                ))}
+                                <PaginationNext disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)} />
                             </PaginationContent>
                         </Pagination>
                     </div>

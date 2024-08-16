@@ -6,8 +6,9 @@ const { PrismaClientValidationError } = require('@prisma/client/runtime/library'
 
 
 // Get all products with optional filtering
+// Get all products with optional filtering and pagination
 router.get('/', async (req, res) => {
-    const { sub_category_id, max_price, min_price, category_id, search } = req.query;
+    const { sub_category_id, max_price, min_price, category_id, search, page = 1, pageSize = 8 } = req.query;
 
     try {
         // Build the filter object dynamically based on query parameters
@@ -29,21 +30,44 @@ router.get('/', async (req, res) => {
             }
         }
 
+        // Implement search functionality
+        const searchFilter = search ? {
+            OR: [
+                { name: { contains: search, mode: 'insensitive' } },
+                { desc: { contains: search, mode: 'insensitive' } }
+            ]
+        } : {};
+
+        const skip = (page - 1) * pageSize;
+        const take = parseInt(pageSize);
+
         const products = await prisma.product.findMany({
             where: {
                 ...filter,
-                // Implement search functionality
-                AND: [
-                    search ? { name: { contains: search, mode: 'insensitive' } } : {},
-                    search ? { desc: { contains: search, mode: 'insensitive' } } : {}
-                ]
+                ...searchFilter
+            },
+            skip,
+            take,
+        });
+
+        const totalProducts = await prisma.product.count({
+            where: {
+                ...filter,
+                ...searchFilter
             }
         });
-        res.status(200).json(products);
+
+        res.status(200).json({
+            products,
+            totalProducts,
+            totalPages: Math.ceil(totalProducts / pageSize),
+            currentPage: parseInt(page),
+        });
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch products' });
     }
 });
+
 
 // Add a new product
 // router.post('/add', async (req, res) => {
