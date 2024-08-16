@@ -158,19 +158,7 @@ export default function Component() {
                             <nav className="space-y-1">
 
                                 <Accordion type="single" collapsible className="w-full">
-                                    {/* {productCategories.map(category => (
-                                        <AccordionItem key={category.id} value={`item-${category.id}`}>
-                                            <div className="flex items-center justify-between">
-                                                <button>{category.name}</button>
-                                                <AccordionTrigger />
-                                            </div>
-                                            <AccordionContent>
-                                                {getSubcategories(category.id).map(subcategory => (
-                                                    <button key={subcategory.id}>{subcategory.name}</button>
-                                                ))}
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    ))} */}
+
 
                                     {productCategories.map(category => (
                                         <AccordionItem key={category.id} value={`item-${category.id}`}>
