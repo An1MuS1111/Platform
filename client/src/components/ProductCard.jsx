@@ -3,20 +3,44 @@ import { Card } from "@/ui-components/ui/card"
 import { Button } from "@/ui-components/ui/button"
 import { useState } from "react"
 
-export default function ProductCard() {
+export default function ProductCard({ product }) {
+
+
+
 
     const [hidden, setHidden] = useState(true)
+    const [currentIndex, setCurrentIndex] = useState(0)
+
+    const nextImage = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === product.images.length - 1 ? 0 : prevIndex + 1
+        )
+    }
+
+    const prevImage = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === 0 ? product.images.length - 1 : prevIndex - 1
+        )
+    }
 
     return (
         <Card className="max-w-sm mx-auto w-full mb-1">
             <div onMouseEnter={() => setHidden(false)} onMouseLeave={() => setHidden(true)} className="max-w-sm mx-auto">
                 <div className="relative">
-                    {/* <img src="barrett-3-seat-queen-reversible-sleeper-sectional.jpg" alt="Axis Bench 2-Piece Sectional Sofa" className="w-full h-auto" /> */}
-                    <img src="http://localhost:4444/uploads/file-1723793621572-283166189.jpeg" alt="Axis Bench 2-Piece Sectional Sofa" className="w-full h-auto" />
+
+                    <img src={`http://localhost:4444/${product.images[currentIndex]}`} alt={product.name} className="w-full h-auto" />
 
                     <HeartIcon className="absolute top-4 right-4 h-6 w-6" />
-                    <ChevronLeftIcon style={{ opacity: hidden ? "0" : "100" }} className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-6 bg-white" />
-                    <ChevronRightIcon style={{ opacity: hidden ? "0" : "100" }} className="absolute right-0 top-1/2 -translate-y-1/2 h-12 w-6 bg-white" />
+                    <ChevronLeftIcon
+                        onClick={prevImage}
+                        style={{ opacity: hidden ? "0" : "100", cursor: "pointer" }}
+                        className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-6 bg-white"
+                    />
+                    <ChevronRightIcon
+                        onClick={nextImage}
+                        style={{ opacity: hidden ? "0" : "100", cursor: "pointer" }}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 h-12 w-6 bg-white"
+                    />
                 </div>
                 <div className="flex items-center justify-center space-x-2 py-4">
                     <CircleIcon className="h-3 w-3" />
@@ -28,8 +52,8 @@ export default function ProductCard() {
                     </Button>
                 </div>
                 <div className="text-center">
-                    <h3 className="text-lg font-semibold px-1">Axis Bench 2-Piece Sectional Sofa</h3>
-                    <p className="text-xl font-bold">$3,498.00</p>
+                    <h3 className="text-lg font-semibold px-1">{product.name}</h3>
+                    <p className="text-xl font-bold">{`$${product.price}`}</p>
                 </div>
             </div>
         </Card>

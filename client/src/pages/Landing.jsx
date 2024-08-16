@@ -13,18 +13,116 @@ import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, Pagi
 import ProductCard from "../components/ProductCard"
 import { Link } from "react-router-dom"
 import { ScrollArea } from "@/ui-components/ui/scroll-area"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import axios from 'axios'
 
 export default function Component() {
 
+
     const [isOpen, setIsOpen] = useState(false);
+    const [productCategories, setProductCategories] = useState([]);
+    const [productSubcategories, setProductSubcategories] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [categoryId, setCategoryId] = useState(null);
+    const [subCategoryId, setSubCategoryId] = useState(null);
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
+    const [search, setSearch] = useState('');
+
+    // const location = useLocation();
+    const navigate = useNavigate();
+
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
 
+    useEffect(() => {
+        // Function to fetch products based on query params
+        const fetchProducts = async () => {
+            const query = new URLSearchParams({
+                category_id: categoryId || '',
+                sub_category_id: subCategoryId || '',
+                min_price: minPrice || '',
+                max_price: maxPrice || '',
+                search: search || '',
+            }).toString();
+
+            try {
+                const response = await axios.get(`http://localhost:4444/products?${query}`);
+                setProducts(response.data);
+
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            }
+        };
+
+        fetchProducts();
+    }, [categoryId, subCategoryId, minPrice, maxPrice, search]);
+
+
+    // Fetch product categories and subcategories
+    useEffect(() => {
+        // Function to fetch categories and subcategories
+        const fetchData = async () => {
+            try {
+                const categoriesResponse = await axios.get("http://localhost:4444/productcategories/");
+                setProductCategories(categoriesResponse.data);
+
+                const subcategoriesResponse = await axios.get("http://localhost:4444/productsubcategories/");
+                setProductSubcategories(subcategoriesResponse.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
+    // Helper function to get subcategories for a specific category
+    const getSubcategories = (categoryId) => {
+        return productSubcategories.filter(subcategory => subcategory.category_id === categoryId);
+    };
+
+    const handleCategoryChange = (id) => {
+        setCategoryId(id);
+        setSubCategoryId(null);
+        navigate({ search: `?category_id=${id}` });
+    };
+
+    const handleSubCategoryChange = (subCategoryId) => {
+        // Find the category associated with the selected sub-category
+        const selectedSubCategory = productSubcategories.find(subcategory => subcategory.id === subCategoryId);
+
+        if (selectedSubCategory) {
+            const categoryId = selectedSubCategory.category_id;
+
+            // Set both category_id and sub_category_id in the state
+            setCategoryId(categoryId);
+            setSubCategoryId(subCategoryId);
+
+            // Update the URL with both category_id and sub_category_id
+            navigate(`?category_id=${categoryId}&sub_category_id=${subCategoryId}`);
+        }
+    };
+
+
+    const handleMinPriceChange = (e) => {
+        setMinPrice(e.target.value);
+        navigate({ search: `?category_id=${categoryId}&sub_category_id=${subCategoryId}&min_price=${e.target.value}` });
+    };
+
+    const handleMaxPriceChange = (e) => {
+        setMaxPrice(e.target.value);
+        navigate({ search: `?category_id=${categoryId}&sub_category_id=${subCategoryId}&max_price=${e.target.value}` });
+    };
+
+
+
     return (
         <div className="bg-white">
-            <div className="flex justify-between items-center p-4 bg-[#f8f8f8]">
+            <div className="flex justify-between items-center p-4 bg-[#f8f8f8] md:px-6">
                 <div className="flex items-center space-x-4">
                     {/* <MenuIcon className="w-6 h-6" /> */}
                     <h1 className="text-xl font-bold">Platform</h1>
@@ -45,16 +143,34 @@ export default function Component() {
                             <h2 className="text-lg font-bold">Categories</h2>
                             <nav className="space-y-1">
 
-
                                 <Accordion type="single" collapsible className="w-full">
-                                    <AccordionItem value="item-1 " >
-                                        <div className="flex items-center justify-between" ><button>Bags</button>
-                                            <AccordionTrigger></AccordionTrigger></div>
-                                        <AccordionContent>
-                                            <button>Sub Bag 1</button>
-                                        </AccordionContent>
-                                    </AccordionItem>
+                                    {/* {productCategories.map(category => (
+                                        <AccordionItem key={category.id} value={`item-${category.id}`}>
+                                            <div className="flex items-center justify-between">
+                                                <button>{category.name}</button>
+                                                <AccordionTrigger />
+                                            </div>
+                                            <AccordionContent>
+                                                {getSubcategories(category.id).map(subcategory => (
+                                                    <button key={subcategory.id}>{subcategory.name}</button>
+                                                ))}
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    ))} */}
 
+                                    {productCategories.map(category => (
+                                        <AccordionItem key={category.id} value={`item-${category.id}`}>
+                                            <div className="flex items-center justify-between">
+                                                <button onClick={() => handleCategoryChange(category.id)}>{category.name}</button>
+                                                <AccordionTrigger />
+                                            </div>
+                                            <AccordionContent>
+                                                {getSubcategories(category.id).map(subcategory => (
+                                                    <button key={subcategory.id} onClick={() => handleSubCategoryChange(subcategory.id)}>{subcategory.name}</button>
+                                                ))}
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    ))}
                                 </Accordion>
 
                                 {/* ends here */}
@@ -65,11 +181,11 @@ export default function Component() {
                             {/* Here ends */}
                             <h2 className="text-lg font-bold">Price</h2>
                             <div className="flex space-x-2">
-                                <Input placeholder="Minimum Price" className="w-3/4" />
+                                <Input placeholder="Minimum Price" className="w-3/4" value={minPrice} onChange={handleMinPriceChange} />
                                 <div className="flex items-center">$</div>
                             </div>
                             <div className="flex space-x-2">
-                                <Input placeholder="Maximum Price" className="w-3/4" />
+                                <Input placeholder="Maximum Price" className="w-3/4" value={maxPrice} onChange={handleMaxPriceChange} />
                                 <div className="flex items-center">$</div>
                             </div>
                             <div className="flex justify-between">
@@ -126,10 +242,10 @@ export default function Component() {
                         </div>
                     </aside>
                 </ScrollArea >
-                <main className="flex-1 p-4">
+                <main className="flex-1 p-4 bg-slate-300">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-2xl font-bold">New Featured (216 Products)</h2>
 
+                        <h2 className="text-2xl font-bold">Products {products.length}</h2>
 
                         <div className="flex items-center space-x-2">
                             <span className="text-sm">Sort by:</span>
@@ -146,30 +262,14 @@ export default function Component() {
                         </div>
                     </div>
                     <div className="grid grid-cols-4 gap-0">
-                        <ProductCard />
-                        <ProductCard />
 
-                        <ProductCard />
+                        {
+                            products.map((product) => (
+                                <ProductCard product={product} />
+                            ))
+                        }
 
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
+
 
                     </div>
                     {/* Here goes the pagination     */}
