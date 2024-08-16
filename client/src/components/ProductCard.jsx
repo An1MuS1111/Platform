@@ -12,7 +12,7 @@ export default function ProductCard() {
             <div onMouseEnter={() => setHidden(false)} onMouseLeave={() => setHidden(true)} className="max-w-sm mx-auto">
                 <div className="relative">
                     {/* <img src="barrett-3-seat-queen-reversible-sleeper-sectional.jpg" alt="Axis Bench 2-Piece Sectional Sofa" className="w-full h-auto" /> */}
-                    <img src="http://localhost:4444/uploads/file-1723783722049-861202159.png" alt="Axis Bench 2-Piece Sectional Sofa" className="w-full h-auto" />
+                    <img src="http://localhost:4444/uploads/file-1723793621572-283166189.jpeg" alt="Axis Bench 2-Piece Sectional Sofa" className="w-full h-auto" />
 
                     <HeartIcon className="absolute top-4 right-4 h-6 w-6" />
                     <ChevronLeftIcon style={{ opacity: hidden ? "0" : "100" }} className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-6 bg-white" />

@@ -18,7 +18,6 @@ import { useState } from "react"
 export default function Component() {
 
     const [isOpen, setIsOpen] = useState(false);
-
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
@@ -48,40 +47,11 @@ export default function Component() {
 
 
                                 <Accordion type="single" collapsible className="w-full">
-                                    <AccordionItem value="item-1">
-                                        <AccordionTrigger>Bags</AccordionTrigger>
+                                    <AccordionItem value="item-1 " >
+                                        <div className="flex items-center justify-between" ><button>Bags</button>
+                                            <AccordionTrigger></AccordionTrigger></div>
                                         <AccordionContent>
-                                            Sub Bag 1
-                                        </AccordionContent>
-                                        <AccordionContent>
-                                            Sub Bag 2
-                                        </AccordionContent>
-                                        <AccordionContent>
-                                            Sub Bag 3
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                    <AccordionItem value="item-2">
-                                        <AccordionTrigger>Bags</AccordionTrigger>
-                                        <AccordionContent>
-                                            Sub Bag 1
-                                        </AccordionContent>
-                                        <AccordionContent>
-                                            Sub Bag 2
-                                        </AccordionContent>
-                                        <AccordionContent>
-                                            Sub Bag 3
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                    <AccordionItem value="item-3">
-                                        <AccordionTrigger>Bags</AccordionTrigger>
-                                        <AccordionContent>
-                                            Sub Bag 1
-                                        </AccordionContent>
-                                        <AccordionContent>
-                                            Sub Bag 2
-                                        </AccordionContent>
-                                        <AccordionContent>
-                                            Sub Bag 3
+                                            <button>Sub Bag 1</button>
                                         </AccordionContent>
                                     </AccordionItem>
 

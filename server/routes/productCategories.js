@@ -3,92 +3,82 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { PrismaClientValidationError } = require('@prisma/client/runtime/library');
 
-
-// Get all users
+// Get all product categories
 router.get('/', async (req, res) => {
     try {
-        const users = await prisma.user.findMany();
-        res.status(200).json(users);
+        const categories = await prisma.productCategory.findMany();
+        res.status(200).json(categories);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch users' });
+        res.status(500).json({ error: 'Failed to fetch product categories' });
     }
 });
 
-// Add a new user
+// Add a new product category
 router.post('/add', async (req, res) => {
-    const { email, password, name, telephone } = req.body;
+    const { name, desc } = req.body;
     try {
-        const user = await prisma.user.create({
+        const category = await prisma.productCategory.create({
             data: {
-                email,
-                password,
                 name,
-
-                telephone,
+                desc,
             },
         });
-        res.status(201).json(user);
+        res.status(201).json(category);
     } catch (error) {
-
-
         if (error instanceof PrismaClientValidationError) {
             res.status(400).json({ error: error.message });
         } else {
-            res.status(500).json({ error: 'Failed to create user' });
+            res.status(500).json({ error: 'Failed to create product category' });
         }
-
     }
 });
 
-// Get a user by ID
+// Get a product category by ID
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const user = await prisma.user.findUnique({
+        const category = await prisma.productCategory.findUnique({
             where: { id: Number(id) },
         });
-        if (user) {
-            res.status(200).json(user);
+        if (category) {
+            res.status(200).json(category);
         } else {
-            res.status(404).json({ error: 'User not found' });
+            res.status(404).json({ error: 'Product category not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch user' });
+        res.status(500).json({ error: 'Failed to fetch product category' });
     }
 });
 
-// Update a user by ID
+// Update a product category by ID
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { email, password, name, telephone } = req.body;
+    const { name, desc } = req.body;
     try {
-        const user = await prisma.user.update({
+        const category = await prisma.productCategory.update({
             where: { id: Number(id) },
             data: {
-                email,
-                password,
                 name,
-
-                telephone,
+                desc,
                 modified_at: new Date(), // Updated field
             },
         });
-        res.status(200).json(user);
+        res.status(200).json(category);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to update user' });
+        res.status(500).json({ error: 'Failed to update product category' });
     }
 });
 
-// Delete a user by ID
+// Delete a product category by ID
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        await prisma.user.delete({
+        await prisma.productCategory.delete({
             where: { id: Number(id) },
         });
         res.status(204).end();
     } catch (error) {
-        res.status(500).json({ error: 'Failed to delete user' });
+        res.status(500).json({ error: 'Failed to delete product category' });
     }
 });
 

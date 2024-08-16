@@ -14,11 +14,10 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  email       String   @unique
-  password    String
-  first_name  String // Change to String if needed
-  last_name   String
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  name     String
   telephone   Int
   created_at  DateTime @default(now())
   modified_at DateTime @updatedAt
@@ -50,4 +49,78 @@ model UserPayment {
   expiry       DateTime
 
   user User @relation(fields: [user_id], references: [id])
+}
+
+model Product {
+  id              Int       @id @default(autoincrement())
+  name            String
+  desc            String
+  SKU             String
+  category_id     Int
+  sub_category_id Int? // Relationship to ProductSubCategory
+  inventory_id    Int
+  price           Float
+  discount_id     Int?
+  images          String[] // New field to store an array of image URLs or paths
+  created_at      DateTime  @default(now())
+  modified_at     DateTime  @updatedAt
+  deleted_at      DateTime?
+
+  category    ProductCategory     @relation(fields: [category_id], references: [id])
+  subCategory ProductSubCategory? @relation(fields: [sub_category_id], references: [id]) // Optional relationship
+  inventory   ProductInventory    @relation(fields: [inventory_id], references: [id])
+  discount    Discount?           @relation(fields: [discount_id], references: [id])
+
+  @@index([category_id])
+  @@index([sub_category_id])
+  @@index([inventory_id])
+  @@index([discount_id])
+}
+
+model ProductCategory {
+  id          Int       @id @default(autoincrement())
+  name        String
+  desc        String
+  created_at  DateTime  @default(now())
+  modified_at DateTime  @updatedAt
+  deleted_at  DateTime?
+
+  products      Product[]
+  subCategories ProductSubCategory[] // Relationship with ProductSubCategory
+}
+
+model ProductSubCategory {
+  id          Int       @id @default(autoincrement())
+  name        String
+  desc        String
+  category_id Int
+  created_at  DateTime  @default(now())
+  modified_at DateTime  @updatedAt
+  deleted_at  DateTime?
+
+  category ProductCategory @relation(fields: [category_id], references: [id])
+  products Product[]
+}
+
+model ProductInventory {
+  id          Int       @id @default(autoincrement())
+  quantity    Int
+  created_at  DateTime  @default(now())
+  modified_at DateTime  @updatedAt
+  deleted_at  DateTime?
+
+  products Product[]
+}
+
+model Discount {
+  id               Int       @id @default(autoincrement())
+  name             String
+  desc             String
+  discount_percent Float
+  active           Boolean
+  created_at       DateTime  @default(now())
+  modified_at      DateTime  @updatedAt
+  deleted_at       DateTime?
+
+  products Product[]
 }
