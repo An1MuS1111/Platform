@@ -17,6 +17,8 @@ const uploadsRouter = require('./routes/uploads')
 const productsRouter = require('./routes/products')
 const productCategoriesRouter = require('./routes/productCategories');
 const productSubCategoriesRouter = require('./routes/productSubCategories');
+const discountsRouter = require('./routes/discounts');
+const productInventoriesRouter = require('./routes/productInventories');
 
 
 // use routes
@@ -25,6 +27,8 @@ app.use('/uploads', uploadsRouter)
 app.use('/products', productsRouter)
 app.use('/productcategories', productCategoriesRouter);
 app.use('/productsubCategories', productSubCategoriesRouter);
+app.use('/discounts', discountsRouter);
+app.use('/productinventories', productInventoriesRouter);
 
 
 
