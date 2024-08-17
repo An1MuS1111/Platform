@@ -6,6 +6,7 @@ import { Input } from "@/ui-components/ui/input"
 import { Textarea } from "@/ui-components/ui/textarea"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel } from "@/ui-components/ui/select"
 import { Button } from "@/ui-components/ui/button"
+
 export default function CreateProduct() {
     const [categories, setCategories] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
@@ -15,9 +16,18 @@ export default function CreateProduct() {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [imagesData, setImagesData] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [formData, setFormData] = useState({
+        name: '',
+        desc: '',
+        SKU: '',
+        category_id: null,
+        sub_category_id: null,
+        inventory_id: null,
+        price: '',
+        discount_id: null
+    });
 
 
-    console.log(imagesData)
     const handleFileChange = (event) => {
         setSelectedFile(event.target.files[0]);
     };
@@ -80,6 +90,38 @@ export default function CreateProduct() {
         }
     }, [selectedCategory, subcategories]);
 
+
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [id]: value
+        }));
+    };
+
+    const handleSelectChange = (id, value) => {
+        setFormData(prevState => ({
+            ...prevState,
+            [id]: parseInt(value)
+        }));
+    };
+
+    const handleSubmit = () => {
+        const dataToSubmit = {
+            ...formData,
+            images
+        };
+
+        axios.post("http://localhost:4444/products/add", dataToSubmit)
+            .then(response => {
+                console.log("Product added:", response.data);
+                // Reset form or show success message
+            })
+            .catch(error => {
+                console.error("Error adding product:", error);
+            });
+    };
+
     return (
         <Card className="w-full max-w-2xl ml-auto mr-auto mt-10">
             <CardHeader>
@@ -90,21 +132,18 @@ export default function CreateProduct() {
 
                 <div className="grid gap-2">
                     <Label htmlFor="name">Product Name</Label>
-                    <Input id="name" placeholder="Enter product name" />
+                    <Input id="name" placeholder="Enter product name" value={formData.name} onChange={handleInputChange} />
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="description">Product Description</Label>
-                    <Textarea id="description" placeholder="Describe your product in detail" rows={4} />
+                    <Label htmlFor="desc">Product Description</Label>
+                    <Textarea id="desc" placeholder="Describe your product in detail" rows={4} value={formData.desc} onChange={handleInputChange} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                         <Label htmlFor="category">Category</Label>
-                        <Select
-                            id="category"
-                            onValueChange={(value) => setSelectedCategory(parseInt(value))}
-                        >
+                        <Select id="category_id" onValueChange={(value) => handleSelectChange('category_id', value)}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select category" />
                             </SelectTrigger>
@@ -119,10 +158,7 @@ export default function CreateProduct() {
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="subcategory">Sub-Category</Label>
-                        <Select
-                            id="subcategory"
-                            disabled={!selectedCategory}
-                        >
+                        <Select id="sub_category_id" disabled={!formData.category_id} onValueChange={(value) => handleSelectChange('sub_category_id', value)}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select sub-category" />
                             </SelectTrigger>
@@ -140,7 +176,7 @@ export default function CreateProduct() {
                 <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                         <Label htmlFor="inventory">Inventory</Label>
-                        <Select id="inventory">
+                        <Select id="inventory_id" onValueChange={(value) => handleSelectChange('inventory_id', value)}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select inventory status" />
                             </SelectTrigger>
@@ -162,7 +198,7 @@ export default function CreateProduct() {
                 <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                         <Label htmlFor="discount">Discount</Label>
-                        <Select id="discount">
+                        <Select id="discount_id" onValueChange={(value) => handleSelectChange('discount_id', value)}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select discount" />
                             </SelectTrigger>
@@ -237,7 +273,7 @@ export default function CreateProduct() {
             </CardContent>
             <CardFooter className="flex justify-end gap-2">
                 <Button variant="ghost">Cancel</Button>
-                <Button>Save Product</Button>
+                <Button onClick={handleSubmit}>Save Product</Button>
             </CardFooter>
         </Card>
     );
