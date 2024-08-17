@@ -80,16 +80,27 @@ export default function CreateProduct() {
             .catch(error => console.error("Error fetching inventories:", error));
     }, []);
 
+    // useEffect(() => {
+    //     if (selectedCategory) {
+    //         // Filter subcategories based on selected category
+    //         const filtered = subcategories.filter(subcategory => subcategory.category_id === selectedCategory);
+    //         setFilteredSubcategories(filtered);
+    //     } else {
+    //         setFilteredSubcategories([]);
+    //     }
+    // }, [selectedCategory, subcategories]);
+
+
     useEffect(() => {
         if (selectedCategory) {
             // Filter subcategories based on selected category
             const filtered = subcategories.filter(subcategory => subcategory.category_id === selectedCategory);
+            console.log("Filtered Subcategories: ", filtered); // Debugging
             setFilteredSubcategories(filtered);
         } else {
             setFilteredSubcategories([]);
         }
     }, [selectedCategory, subcategories]);
-
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
@@ -99,18 +110,33 @@ export default function CreateProduct() {
         }));
     };
 
+    // const handleSelectChange = (id, value) => {
+    //     setFormData(prevState => ({
+    //         ...prevState,
+    //         [id]: parseInt(value)
+    //     }));
+    // };
+
+
+    // Update handleSelectChange function to handle setting the selectedCategory
     const handleSelectChange = (id, value) => {
         setFormData(prevState => ({
             ...prevState,
             [id]: parseInt(value)
         }));
+        if (id === 'category_id') {
+            setSelectedCategory(parseInt(value)); // Update selectedCategory when category is selected
+        }
     };
-
     const handleSubmit = () => {
+        const images = imagesData.map(image => image.path); // Extract the 'path' from each image object
+
         const dataToSubmit = {
             ...formData,
-            images
+            images // Include the array of paths in the payload
         };
+
+        console.log("Data to submit:", dataToSubmit);
 
         axios.post("http://localhost:4444/products/add", dataToSubmit)
             .then(response => {
@@ -143,7 +169,10 @@ export default function CreateProduct() {
                 <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                         <Label htmlFor="category">Category</Label>
-                        <Select id="category_id" onValueChange={(value) => handleSelectChange('category_id', value)}>
+                        <Select
+                            id="category_id"
+                            onValueChange={(value) => handleSelectChange('category_id', value)}
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder="Select category" />
                             </SelectTrigger>
@@ -156,13 +185,32 @@ export default function CreateProduct() {
                             </SelectContent>
                         </Select>
                     </div>
-                    <div className="grid gap-2">
+                    {/* <div className="grid gap-2">
                         <Label htmlFor="subcategory">Sub-Category</Label>
                         <Select id="sub_category_id" disabled={!formData.category_id} onValueChange={(value) => handleSelectChange('sub_category_id', value)}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select sub-category" />
                             </SelectTrigger>
                             <SelectContent>
+                                {filteredSubcategories.map(subcategory => (
+                                    <SelectItem key={subcategory.id} value={subcategory.id}>
+                                        {subcategory.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div> */}
+                    <div className="grid gap-2">
+                        <Label htmlFor="subcategory">Sub-Category</Label>
+                        <Select
+                            id="sub_category_id"
+                            disabled={!formData.category_id}
+                            onValueChange={(value) => handleSelectChange('sub_category_id', value)}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select Sub-category" />
+                            </SelectTrigger>
+                            <SelectContent className='bg-white'>
                                 {filteredSubcategories.map(subcategory => (
                                     <SelectItem key={subcategory.id} value={subcategory.id}>
                                         {subcategory.name}
@@ -180,7 +228,7 @@ export default function CreateProduct() {
                             <SelectTrigger>
                                 <SelectValue placeholder="Select inventory status" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className='bg-white'>
                                 {inventories.map(inventory => (
                                     <SelectItem key={inventory.id} value={inventory.id}>
                                         {inventory.quantity > 0 ? 'In Stock' : 'Out of Stock'}
@@ -191,7 +239,7 @@ export default function CreateProduct() {
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="price">Price</Label>
-                        <Input id="price" type="number" placeholder="Enter product price" />
+                        <Input id="price" type="number" placeholder="Enter product price" value={formData.price} onChange={handleInputChange} />
                     </div>
                 </div>
 
@@ -212,8 +260,8 @@ export default function CreateProduct() {
                         </Select>
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="sku">SKU</Label>
-                        <Input id="sku" placeholder="Enter SKU" />
+                        <Label htmlFor="SKU">SKU</Label>
+                        <Input id="SKU" placeholder="Enter SKU" value={formData.SKU} onChange={handleInputChange} />
                     </div>
                 </div>
                 {/* this is for images */}
