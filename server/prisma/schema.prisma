@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  name     String
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  password    String
+  name        String
   telephone   Int
   created_at  DateTime @default(now())
   modified_at DateTime @updatedAt
+  is_admin    Boolean  @default(false)
 
   user_address UserAddress[]
   user_payment UserPayment[]

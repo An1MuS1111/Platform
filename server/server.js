@@ -9,7 +9,6 @@ app.use(express.json());
 
 
 
-// DatabaseConnection();
 
 // import routes
 const usersRouter = require('./routes/users')
@@ -19,6 +18,7 @@ const productCategoriesRouter = require('./routes/productCategories');
 const productSubCategoriesRouter = require('./routes/productSubCategories');
 const discountsRouter = require('./routes/discounts');
 const productInventoriesRouter = require('./routes/productInventories');
+const authsRouter = require('./routes/auths.js');
 
 
 // use routes
@@ -29,6 +29,7 @@ app.use('/productcategories', productCategoriesRouter);
 app.use('/productsubCategories', productSubCategoriesRouter);
 app.use('/discounts', discountsRouter);
 app.use('/productinventories', productInventoriesRouter);
+app.use('/auths', authsRouter);
 
 
 
@@ -38,6 +39,8 @@ app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 
 
+// DatabaseConnection();
+authsRouter.DatabaseConnection();
 
 // set up server
 PORT = 4444

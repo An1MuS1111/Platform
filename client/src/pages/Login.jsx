@@ -1,12 +1,44 @@
-
-
+import { Link, useNavigate } from 'react-router-dom';
 import { Label } from "@/ui-components/ui/label"
 import { Input } from "@/ui-components/ui/input"
 import { Button } from "@/ui-components/ui/button"
+import { useAuth } from '../auth/AuthProvider';
+import { useState } from 'react';
+import axios from 'axios';
+
 
 export default function Login() {
+
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
+    const { setToken } = useAuth();
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.post("http://localhost:4444/auths/login", formData);
+            localStorage.setItem('user', JSON.stringify(res.data));
+            setToken(res.data.accessToken);
+
+            navigate('/', { replace: true });
+        } catch (err) {
+            console.log(err);
+            alert(err.response.data);
+        }
+    };
+
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-950">
+        <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-950 ">
             <div className="mx-auto w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg dark:bg-gray-900">
                 <div className="text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
@@ -14,6 +46,7 @@ export default function Login() {
                     </h2>
                     <p className="mt-2 text-gray-500 dark:text-gray-400">
                         Don't have an account?{" "}
+                        <Link className="font-medium text-indigo-600 hover:underline dark:text-indigo-400" to='/signin' >Sign in</Link>
 
                     </p>
                 </div>
@@ -24,6 +57,7 @@ export default function Login() {
                         </Label>
                         <div className="mt-1">
                             <Input
+                                onChange={handleChange}
                                 id="email"
                                 name="email"
                                 type="email"
@@ -40,6 +74,7 @@ export default function Login() {
                         </Label>
                         <div className="mt-1 flex items-center">
                             <Input
+                                onChange={handleChange}
                                 id="password"
                                 name="password"
                                 type="password"
@@ -60,10 +95,11 @@ export default function Login() {
                     </div>
                     <div>
                         <Button
+                            onClick={handleSubmit}
                             type="submit"
                             className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-indigo-600"
                         >
-                            Sign in
+                            Log in
                         </Button>
                     </div>
                 </form>
