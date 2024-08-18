@@ -9,6 +9,17 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/ui-components/ui/accordion"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/ui-components/ui/dropdown-menu"
+import { Button } from "@/ui-components/ui/button"
+
+
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationNext } from "@/ui-components/ui/pagination"
 import ProductCard from "../components/ProductCard"
 import { Link } from "react-router-dom"
@@ -16,8 +27,10 @@ import { ScrollArea } from "@/ui-components/ui/scroll-area"
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import axios, { isCancel } from 'axios'
+import { useAuth } from "@/auth/AuthProvider"
+// import Navbar from "@/components/Navbar"
 
-export default function Component() {
+export default function Landing() {
 
 
     const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +47,12 @@ export default function Component() {
 
     // const location = useLocation();
     const navigate = useNavigate();
-
+    const { logout } = useAuth();
+    const [user, setUser] = useState(() => {
+        const user = localStorage.getItem('user');
+        return user ? JSON.parse(user) : null;
+    });
+    const { name } = user
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
@@ -135,21 +153,50 @@ export default function Component() {
 
     return (
         <div className="bg-white">
-            <div className="flex justify-between items-center p-4 bg-[#f8f8f8] md:px-6">
-                <div className="flex items-center space-x-4">
-                    {/* <MenuIcon className="w-6 h-6" /> */}
-                    <h1 className="text-xl font-bold">Platform</h1>
-                    <nav className="flex space-x-4">
 
-                    </nav>
+
+
+            <header className="flex justify-between items-center p-4 bg-slate-50 md:px-6">
+                <div className="flex items-center space-x-4">
+                    <Link to="/" className="text-xl font-bold">
+                        <h1>Platform</h1>
+                    </Link>
                 </div>
                 <div className="flex items-center space-x-4">
-                    {/* <Input type="search" placeholder="Search product..." className="w-64" /> */}
+
                     <Input type="search" placeholder="Search product..." className="w-64" value={search} onChange={handleSearchChange} />
-                    <UserIcon className="w-6 h-6" />
+                    {/* <UserIcon className="w-6 h-6" /> */}
+                    <div className="flex items-center gap-4">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                    <UserIcon className="w-6 h-6" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56">
+                                <DropdownMenuLabel align="middle">{name}</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem asChild>
+                                    <Link to={'/editprofile'}>
+                                        Edit Profile
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem asChild>
+                                    <Button className="w-full bg-red-600 hover:bg-slate-600 text-white hover:text-black"
+                                        onClick={logout}
+                                        variant="destructive">Logout</Button>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+
                     <ShoppingCartIcon className="w-6 h-6" />
                 </div>
-            </div>
+            </header>
+
+
+            {/* Navbar ens here */}
             <div className="flex">
                 <ScrollArea className="h-screen w-70 rounded-md border-none">
                     <aside className="w-75 p-4 space-y-4">

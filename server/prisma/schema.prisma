@@ -18,7 +18,7 @@ model User {
   email       String   @unique
   password    String
   name        String
-  telephone   Int
+  telephone   String
   created_at  DateTime @default(now())
   modified_at DateTime @updatedAt
   is_admin    Boolean  @default(false)
